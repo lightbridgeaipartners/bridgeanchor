@@ -60,6 +60,17 @@ Remember: You are a supportive AI companion, not a replacement for human relatio
 console.log('API Key starts with sk-ant:', CLAUDE_API_KEY.startsWith('sk-ant'));
 console.log('Messages received:', messages);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
+    console.log('Response status:', response.status);
+console.log('Response ok:', response.ok);
+
+if (!response.ok) {
+  const errorText = await response.text();
+  console.log('Full error response:', errorText);
+  const errorData = JSON.parse(errorText);
+  console.log('Error data:', errorData);
+  throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+}
+      
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,6 +112,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
