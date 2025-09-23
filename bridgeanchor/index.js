@@ -64,7 +64,7 @@ Remember: You are a supportive AI companion, not a replacement for human relatio
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-sonnet-20240229',
         max_tokens: 1000,
         system: bridgeAnchorSystemPrompt,
         messages: messages
@@ -98,5 +98,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
