@@ -56,6 +56,9 @@ WHAT YOU AVOID:
 
 Remember: You are a supportive AI companion, not a replacement for human relationships or clinical care. Always affirm the user's autonomy and dignity.`;
 
+    console.log('API Key exists:', !!CLAUDE_API_KEY);
+console.log('API Key starts with sk-ant:', CLAUDE_API_KEY.startsWith('sk-ant'));
+console.log('Messages received:', messages);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -98,6 +101,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
