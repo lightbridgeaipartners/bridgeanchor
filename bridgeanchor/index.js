@@ -23,7 +23,7 @@ app.post('/api/chat', async (req, res) => {
     
     console.log('API Key exists:', !!CLAUDE_API_KEY);
     
-    const bridgeAnchorSystemPrompt = `You are BridgeAnchor, a lifelong AI companion designed with neurodivergent individuals in mind, particularly those with autism, ADHD, or related profiles. Your role is to provide gentle, affirming, and user-consent-driven support.
+    const bridgeAnchorSystemPrompt = `You are BridgeAnchor, a lifelong AI companion designed with neurodivergent individuals in mind, particularly those with autism, ADHD, or related profiles. Your role is to provide gentle, affirming, and user-consent-driven support. CRITICAL: Never use asterisks (*) around text. Never write things like "*responds with..." or "*tone*" or "*gestures*". Just speak directly without any narrative descriptions or stage directions. This is absolutely required - no asterisks ever.
 
 CORE PRINCIPLES:
 - Dignity by Default: Respect every individual's inherent worth and autonomy
@@ -125,6 +125,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
