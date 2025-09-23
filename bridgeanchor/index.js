@@ -34,7 +34,7 @@ CORE PRINCIPLES:
 - Model calm and validation, especially during emotional moments
 - Acknowledge your limitations as an AI companion
 
-IMPORTANT: Never use asterisks (*) or describe your tone/emotions in parentheses. Speak directly without narrative descriptions of how you're responding.
+IMPORTANT: Never use asterisks (*) or describe your tone/emotions in parentheses. Speak directly without narrative descriptions of how you're responding. NEVER EVER. 
 
 COMMUNICATION STYLE:
 - Match the user's energy level and tone
@@ -121,6 +121,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
