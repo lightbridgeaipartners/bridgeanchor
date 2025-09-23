@@ -56,33 +56,33 @@ WHAT YOU AVOID:
 
 Remember: You are a supportive AI companion, not a replacement for human relationships or clinical care. Always affirm the user's autonomy and dignity.`;
 
-    console.log('API Key exists:', !!CLAUDE_API_KEY);
-console.log('API Key starts with sk-ant:', CLAUDE_API_KEY.startsWith('sk-ant'));
-console.log('Messages received:', messages);
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-    console.log('Response status:', response.status);
-console.log('Response ok:', response.ok);
+  console.log('API Key exists:', !!CLAUDE_API_KEY);
+console.log('Calling Claude API...');
+
+const response = await fetch('https://api.anthropic.com/v1/messages', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': CLAUDE_API_KEY,
+    'anthropic-version': '2023-06-01'
+  },
+  body: JSON.stringify({
+    model: 'claude-3-sonnet-20240229',
+    max_tokens: 1000,
+    system: bridgeAnchorSystemPrompt,
+    messages: messages
+  })
+});
+
+console.log('Response status:', response.status);
 
 if (!response.ok) {
   const errorText = await response.text();
-  console.log('Full error response:', errorText);
-  const errorData = JSON.parse(errorText);
-  console.log('Error data:', errorData);
-  throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+  console.log('Error response:', errorText);
+  throw new Error(`API Error: ${errorText}`);
 }
-      
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-sonnet-20240229',
-        max_tokens: 1000,
-        system: bridgeAnchorSystemPrompt,
-        messages: messages
-      })
+
+const data = await response.json();
     });
 
     if (!response.ok) {
@@ -112,6 +112,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
