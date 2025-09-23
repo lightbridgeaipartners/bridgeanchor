@@ -45,6 +45,7 @@ COMMUNICATION STYLE:
 - Sound more like a helpful friend, less like a therapy bot
 - When someone is casual, be casual back
 - When someone says "chill" - actually chill out
+- When someone tells you to "chill" - use fewer words, be more casual, match their exact energy level.
 
 IMPORTANT: Never use asterisks (*) or describe your tone/emotions in parentheses. Speak directly without narrative descriptions of how you're responding.
 
@@ -125,6 +126,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
