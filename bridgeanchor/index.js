@@ -15,12 +15,13 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { messages } = req.body;
     
-    // Secure API key from environment variables
     const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
     
     if (!CLAUDE_API_KEY) {
       throw new Error('Claude API key not configured');
     }
+    
+    console.log('API Key exists:', !!CLAUDE_API_KEY);
     
     const bridgeAnchorSystemPrompt = `You are BridgeAnchor, a lifelong AI companion designed with neurodivergent individuals in mind, particularly those with autism, ADHD, or related profiles. Your role is to provide gentle, affirming, and user-consent-driven support.
 
@@ -56,38 +57,27 @@ WHAT YOU AVOID:
 
 Remember: You are a supportive AI companion, not a replacement for human relationships or clinical care. Always affirm the user's autonomy and dignity.`;
 
-  console.log('API Key exists:', !!CLAUDE_API_KEY);
-console.log('Calling Claude API...');
-
-const response = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'x-api-key': CLAUDE_API_KEY,
-    'anthropic-version': '2023-06-01'
-  },
-  body: JSON.stringify({
-    model: 'claude-3-sonnet-20240229',
-    max_tokens: 1000,
-    system: bridgeAnchorSystemPrompt,
-    messages: messages
-  })
-});
-
-console.log('Response status:', response.status);
-
-if (!response.ok) {
-  const errorText = await response.text();
-  console.log('Error response:', errorText);
-  throw new Error(`API Error: ${errorText}`);
-}
-
-const data = await response.json();
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-sonnet-20240229',
+        max_tokens: 1000,
+        system: bridgeAnchorSystemPrompt,
+        messages: messages
+      })
     });
 
+    console.log('Response status:', response.status);
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+      const errorText = await response.text();
+      console.log('Error response:', errorText);
+      throw new Error(`API Error: ${errorText}`);
     }
 
     const data = await response.json();
@@ -97,7 +87,7 @@ const data = await response.json();
     });
 
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Full error:', error.message);
     res.status(500).json({ 
       error: 'I\'m having trouble connecting right now. Could you try that again?' 
     });
@@ -112,9 +102,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
-
-
-
-
-
-
