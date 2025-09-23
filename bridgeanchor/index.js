@@ -66,7 +66,7 @@ Remember: You are a supportive AI companion, not a replacement for human relatio
       },
       body: JSON.stringify({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 1000,
+        max_tokens: 500,
         system: bridgeAnchorSystemPrompt,
         messages: messages
       })
@@ -102,5 +102,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
