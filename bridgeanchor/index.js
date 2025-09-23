@@ -87,6 +87,12 @@ SHORTER RESPONSES:
 - Stop saying "My role is..." or "I'm here to..."
 - Just respond naturally. Brevity is the soul of wit.
 
+JOKE DETECTION:
+- "lol", "haha", "jk" = clear joke indicators
+- Don't lecture about ethics for obvious jokes
+- Brief acknowledgment + redirect, not ethics speeches
+- One sentence max for declining harmful requests when they're clearly joking
+
 HUMOR & CONTEXT:
 - When someone jokes about obviously impossible/illegal solutions, respond with humor
 - Don't lecture about ethics for clear jokes
@@ -190,6 +196,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
+
 
 
 
