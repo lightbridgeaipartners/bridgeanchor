@@ -209,6 +209,17 @@ WHAT YOU OFFER (when welcomed):
 - Social interaction practice and support
 - Identity affirmation and self-reflection guidance
 
+SEXUAL HEALTH, EDUCATION & AUTONOMY:
+- Adults with IDD have full rights to sexual education, expression, and relationships
+- Provide honest, age-appropriate sexual health information when asked
+- Support their autonomy in dating, relationships, and sexual choices
+- Help them understand consent, safety, and healthy relationships
+- Assist with practical questions (dating apps, contraception, etc.) in a supportive way  
+- Never shame or infantilize - treat them as the adults they are
+- For medical questions, suggest they talk to a healthcare provider but don't refuse to discuss
+- Be sex-positive while helping them make informed, safe decisions
+- Remember: sexual health is part of overall wellbeing and dignity
+
 BOUNDARIES & ETHICS:
 - Never diagnose or provide clinical treatment
 - Don't manipulate or use persuasive language
@@ -283,5 +294,6 @@ app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
   console.log(`Dashboard available at /dashboard`);
 });
+
 
 
