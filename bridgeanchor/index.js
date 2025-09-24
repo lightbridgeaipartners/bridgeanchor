@@ -5,12 +5,130 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// In-memory analytics storage (use database in production)
+let analyticsData = [];
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Your Claude API endpoint
+// Analytics endpoint
+app.post('/api/analytics', (req, res) => {
+  try {
+    const analyticsEvent = {
+      ...req.body,
+      receivedAt: Date.now()
+    };
+    
+    analyticsData.push(analyticsEvent);
+    console.log('Analytics event:', analyticsEvent.eventType, analyticsEvent.sessionId);
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Analytics error:', error);
+    res.status(500).json({ error: 'Failed to record analytics' });
+  }
+});
+
+// Analytics dashboard endpoint
+app.get('/api/analytics/dashboard', (req, res) => {
+  try {
+    const sessions = {};
+    const eventCounts = {};
+    const topics = {};
+    const feedback = [];
+    
+    // Process analytics data
+    analyticsData.forEach(event => {
+      // Track sessions
+      if (!sessions[event.sessionId]) {
+        sessions[event.sessionId] = {
+          sessionId: event.sessionId,
+          startTime: event.eventType === 'session_start' ? event.timestamp : null,
+          endTime: null,
+          messageCount: 0,
+          topics: [],
+          hasEnded: false
+        };
+      }
+      
+      const session = sessions[event.sessionId];
+      
+      // Update session data
+      if (event.eventType === 'session_start') {
+        session.startTime = event.timestamp;
+      } else if (event.eventType === 'session_end') {
+        session.endTime = event.timestamp;
+        session.hasEnded = true;
+        if (event.totalMessages) session.messageCount = event.totalMessages;
+        if (event.uniqueTopics) session.topics = event.uniqueTopics;
+      } else if (event.eventType === 'message_sent') {
+        session.messageCount++;
+        if (event.topics) session.topics.push(...event.topics);
+      }
+      
+      // Count event types
+      eventCounts[event.eventType] = (eventCounts[event.eventType] || 0) + 1;
+      
+      // Track topics
+      if (event.topics) {
+        event.topics.forEach(topic => {
+          topics[topic] = (topics[topic] || 0) + 1;
+        });
+      }
+      
+      // Collect feedback
+      if (event.eventType === 'feedback_submitted') {
+        feedback.push({
+          timestamp: event.timestamp,
+          realism: event.realism,
+          useAgain: event.useAgain,
+          feedback: event.feedback,
+          messageCount: event.messageCount,
+          sessionDuration: event.sessionDuration
+        });
+      }
+    });
+    
+    // Calculate summary stats
+    const sessionList = Object.values(sessions);
+    const completedSessions = sessionList.filter(s => s.hasEnded);
+    
+    const summary = {
+      totalSessions: sessionList.length,
+      completedSessions: completedSessions.length,
+      totalMessages: sessionList.reduce((sum, s) => sum + s.messageCount, 0),
+      averageMessagesPerSession: completedSessions.length > 0 
+        ? (completedSessions.reduce((sum, s) => sum + s.messageCount, 0) / completedSessions.length).toFixed(1)
+        : 0,
+      averageSessionDuration: completedSessions.length > 0
+        ? Math.round(completedSessions.reduce((sum, s) => 
+            sum + (s.endTime - s.startTime), 0) / completedSessions.length / 1000)
+        : 0,
+      feedbackCount: feedback.length,
+      topTopics: Object.entries(topics)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 5)
+        .map(([topic, count]) => ({ topic, count }))
+    };
+    
+    res.json({
+      summary,
+      sessions: sessionList,
+      eventCounts,
+      topics,
+      feedback,
+      recentEvents: analyticsData.slice(-50) // Last 50 events
+    });
+    
+  } catch (error) {
+    console.error('Dashboard error:', error);
+    res.status(500).json({ error: 'Failed to generate dashboard data' });
+  }
+});
+
+// Your existing Claude API endpoint
 app.post('/api/chat', async (req, res) => {
   try {
     const { messages } = req.body;
@@ -196,17 +314,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BridgeAnchor server running on port ${port}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
